@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Play, Pause, Square, Volume2, Radio, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StreamMetadataReader, getMetadataViaProxy, type TrackMetadata } from '@/utils/streamMetadata';
 
 interface StreamQuality {
   bitrate: string;
@@ -21,6 +22,7 @@ interface NowPlaying {
   title: string;
   artist: string;
   album?: string;
+  lastUpdated: number;
 }
 
 const somaStations: SomaStation[] = [
@@ -199,6 +201,7 @@ export const SomaPlayer = () => {
   const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const nowPlayingInterval = useRef<NodeJS.Timeout | null>(null);
+  const metadataReader = useRef<StreamMetadataReader>(new StreamMetadataReader());
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -212,25 +215,44 @@ export const SomaPlayer = () => {
       if (nowPlayingInterval.current) {
         clearInterval(nowPlayingInterval.current);
       }
+      metadataReader.current.abort();
     };
   }, []);
 
-  // Fetch now playing info
-  const fetchNowPlaying = async (stationId: string) => {
+  // Fetch real now playing info from stream metadata
+  const fetchNowPlaying = async (station: SomaStation, streamUrl: string) => {
     try {
-      // Mock now playing data since Soma FM doesn't have a public API for this
-      // In a real app, you'd use their internal API or parse stream metadata
-      const mockTracks = [
-        { artist: 'Emancipator', title: 'Elephant Survival', album: 'Dusk to Dawn' },
-        { artist: 'Bonobo', title: 'Kong', album: 'Black Sands' },
-        { artist: 'Tycho', title: 'A Walk', album: 'Dive' },
-        { artist: 'Thievery Corporation', title: 'Lebanese Blonde', album: 'The Mirror Conspiracy' },
-        { artist: 'RJD2', title: 'Ghostwriter', album: 'Deadringer' },
-        { artist: 'Boards of Canada', title: 'Roygbiv', album: 'Music Has the Right to Children' }
-      ];
+      console.log(`Fetching metadata for ${station.title}...`);
       
-      const randomTrack = mockTracks[Math.floor(Math.random() * mockTracks.length)];
-      setNowPlaying(randomTrack);
+      // Try multiple methods to get metadata
+      let metadata: TrackMetadata | null = null;
+      
+      // Method 1: Try SomaFM's JSON endpoint
+      try {
+        metadata = await getMetadataViaProxy(station.id);
+        console.log('Got metadata via SomaFM API:', metadata);
+      } catch (error) {
+        console.log('SomaFM API failed, trying stream metadata...');
+      }
+      
+      // Method 2: Try reading from stream directly (may fail due to CORS)
+      if (!metadata) {
+        try {
+          metadata = await metadataReader.current.getMetadata(streamUrl);
+          console.log('Got metadata from stream:', metadata);
+        } catch (error) {
+          console.log('Stream metadata failed:', error);
+        }
+      }
+      
+      if (metadata) {
+        setNowPlaying({
+          ...metadata,
+          lastUpdated: Date.now()
+        });
+      } else {
+        console.log('No metadata available, keeping current info');
+      }
     } catch (error) {
       console.error('Error fetching now playing:', error);
     }
@@ -264,9 +286,9 @@ export const SomaPlayer = () => {
       setIsPlaying(true);
       
       // Fetch now playing info immediately and then every 30 seconds
-      fetchNowPlaying(station.id);
+      fetchNowPlaying(station, selectedStream.url);
       nowPlayingInterval.current = setInterval(() => {
-        fetchNowPlaying(station.id);
+        fetchNowPlaying(station, selectedStream.url);
       }, 30000);
       
     } catch (error) {
@@ -307,6 +329,8 @@ export const SomaPlayer = () => {
       clearInterval(nowPlayingInterval.current);
       nowPlayingInterval.current = null;
     }
+    
+    metadataReader.current.abort();
   };
 
   return (
