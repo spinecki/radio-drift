@@ -1,15 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Play, Pause, Square, Volume2 } from 'lucide-react';
+import { Play, Pause, Square, Volume2, Radio, Music } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+interface StreamQuality {
+  bitrate: string;
+  url: string;
+}
 
 interface SomaStation {
   id: string;
   title: string;
   description: string;
-  streamUrl: string;
   genre: string;
+  streams: StreamQuality[];
+}
+
+interface NowPlaying {
+  title: string;
+  artist: string;
+  album?: string;
 }
 
 const somaStations: SomaStation[] = [
@@ -17,51 +28,177 @@ const somaStations: SomaStation[] = [
     id: 'groovesalad',
     title: 'Groove Salad',
     description: 'A nicely chilled plate of ambient/downtempo beats and grooves.',
-    streamUrl: 'https://ice1.somafm.com/groovesalad-256-mp3',
-    genre: 'Ambient/Downtempo'
+    genre: 'Ambient/Downtempo',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/groovesalad-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/groovesalad-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/groovesalad-64-aac' }
+    ]
   },
   {
     id: 'dronezone',
     title: 'Drone Zone',
-    description: 'Served best chilled, safe with most medications.',
-    streamUrl: 'https://ice1.somafm.com/dronezone-256-mp3',
-    genre: 'Ambient'
+    description: 'Served best chilled, safe with most medications. Atmospheric textures with minimal beats.',
+    genre: 'Ambient',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/dronezone-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/dronezone-64-aac' }
+    ]
   },
   {
     id: 'defcon',
     title: 'DEF CON Radio',
     description: 'Music for Hacking. The DEF CON Year-Round Channel.',
-    streamUrl: 'https://ice1.somafm.com/defcon-256-mp3',
-    genre: 'Electronic'
+    genre: 'Electronic',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/defcon-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/defcon-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/defcon-64-aac' }
+    ]
   },
   {
     id: 'beatblender',
     title: 'Beat Blender',
     description: 'A late night blend of deep-house and downtempo chill.',
-    streamUrl: 'https://ice1.somafm.com/beatblender-256-mp3',
-    genre: 'Deep House'
+    genre: 'Deep House',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/beatblender-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/beatblender-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/beatblender-64-aac' }
+    ]
   },
   {
     id: 'secretagent',
     title: 'Secret Agent',
-    description: 'The soundtrack for your stylish, mysterious, dangerous life.',
-    streamUrl: 'https://ice1.somafm.com/secretagent-256-mp3',
-    genre: 'Lounge'
+    description: 'The soundtrack for your stylish, mysterious, dangerous life. For Spies and PIs too!',
+    genre: 'Lounge',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/secretagent-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/secretagent-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/secretagent-64-aac' }
+    ]
   },
   {
     id: 'spacestation',
     title: 'Space Station Soma',
     description: 'Tune in, turn on, space out. Spaced-out ambient and mid-tempo electronica.',
-    streamUrl: 'https://ice1.somafm.com/spacestation-256-mp3',
-    genre: 'Space Ambient'
+    genre: 'Space Ambient',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/spacestation-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/spacestation-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/spacestation-64-aac' }
+    ]
+  },
+  {
+    id: 'lush',
+    title: 'Lush',
+    description: 'Sensuous and mellow female vocals, many with an electronic influence.',
+    genre: 'Electronic/Vocal',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/lush-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/lush-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/lush-64-aac' }
+    ]
+  },
+  {
+    id: 'indiepop',
+    title: 'Indie Pop Rocks!',
+    description: 'New and classic favorite indie pop tracks.',
+    genre: 'Indie Pop',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/indiepop-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/indiepop-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/indiepop-64-aac' }
+    ]
+  },
+  {
+    id: 'poptron',
+    title: 'PopTron',
+    description: 'Electropop and indie dance rock with sparkle and pop.',
+    genre: 'Electropop',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/poptron-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/poptron-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/poptron-64-aac' }
+    ]
+  },
+  {
+    id: 'cliqhop',
+    title: 'cliqhop idm',
+    description: "Blips'n'beeps backed mostly w/beats. Intelligent Dance Music.",
+    genre: 'IDM',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/cliqhop-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/cliqhop-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/cliqhop-64-aac' }
+    ]
+  },
+  {
+    id: 'deepspaceone',
+    title: 'Deep Space One',
+    description: 'Deep ambient electronic, experimental and space music. For inner and outer space exploration.',
+    genre: 'Space Music',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/deepspaceone-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/deepspaceone-64-aac' }
+    ]
+  },
+  {
+    id: 'thetrip',
+    title: 'The Trip',
+    description: 'Progressive house / trance. Tip top tunes.',
+    genre: 'Progressive House',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/thetrip-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/thetrip-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/thetrip-64-aac' }
+    ]
+  },
+  {
+    id: 'u80s',
+    title: 'Underground 80s',
+    description: 'Early 80s UK Synthpop and a bit of New Wave.',
+    genre: '80s Synthpop',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/u80s-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/u80s-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/u80s-64-aac' }
+    ]
+  },
+  {
+    id: 'metal',
+    title: 'Metal Detector',
+    description: 'From black to doom, prog to sludge, thrash to post, stoner to crossover, punk to industrial.',
+    genre: 'Metal',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/metal-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/metal-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/metal-64-aac' }
+    ]
+  },
+  {
+    id: 'missioncontrol',
+    title: 'Mission Control',
+    description: 'Celebrating NASA and Space Explorers everywhere.',
+    genre: 'Space/Ambient',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/missioncontrol-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/missioncontrol-128-mp3' },
+      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/missioncontrol-64-aac' }
+    ]
   }
 ];
 
 export const SomaPlayer = () => {
   const [currentStation, setCurrentStation] = useState<SomaStation | null>(null);
+  const [currentStream, setCurrentStream] = useState<StreamQuality | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const nowPlayingInterval = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -72,12 +209,37 @@ export const SomaPlayer = () => {
         audioRef.current.pause();
         audioRef.current = null;
       }
+      if (nowPlayingInterval.current) {
+        clearInterval(nowPlayingInterval.current);
+      }
     };
   }, []);
 
-  const playStation = async (station: SomaStation) => {
+  // Fetch now playing info
+  const fetchNowPlaying = async (stationId: string) => {
+    try {
+      // Mock now playing data since Soma FM doesn't have a public API for this
+      // In a real app, you'd use their internal API or parse stream metadata
+      const mockTracks = [
+        { artist: 'Emancipator', title: 'Elephant Survival', album: 'Dusk to Dawn' },
+        { artist: 'Bonobo', title: 'Kong', album: 'Black Sands' },
+        { artist: 'Tycho', title: 'A Walk', album: 'Dive' },
+        { artist: 'Thievery Corporation', title: 'Lebanese Blonde', album: 'The Mirror Conspiracy' },
+        { artist: 'RJD2', title: 'Ghostwriter', album: 'Deadringer' },
+        { artist: 'Boards of Canada', title: 'Roygbiv', album: 'Music Has the Right to Children' }
+      ];
+      
+      const randomTrack = mockTracks[Math.floor(Math.random() * mockTracks.length)];
+      setNowPlaying(randomTrack);
+    } catch (error) {
+      console.error('Error fetching now playing:', error);
+    }
+  };
+
+  const playStation = async (station: SomaStation, stream?: StreamQuality) => {
     if (!audioRef.current) return;
 
+    const selectedStream = stream || station.streams[0]; // Default to first (highest quality)
     setIsLoading(true);
     
     try {
@@ -85,15 +247,31 @@ export const SomaPlayer = () => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       
+      // Clear existing interval
+      if (nowPlayingInterval.current) {
+        clearInterval(nowPlayingInterval.current);
+      }
+      
       // Set new station
       setCurrentStation(station);
-      audioRef.current.src = station.streamUrl;
+      setCurrentStream(selectedStream);
+      audioRef.current.src = selectedStream.url;
+      
+      console.log(`Playing ${station.title} at ${selectedStream.bitrate}: ${selectedStream.url}`);
       
       // Play new stream
       await audioRef.current.play();
       setIsPlaying(true);
+      
+      // Fetch now playing info immediately and then every 30 seconds
+      fetchNowPlaying(station.id);
+      nowPlayingInterval.current = setInterval(() => {
+        fetchNowPlaying(station.id);
+      }, 30000);
+      
     } catch (error) {
       console.error('Error playing station:', error);
+      setIsPlaying(false);
     } finally {
       setIsLoading(false);
     }
@@ -122,6 +300,13 @@ export const SomaPlayer = () => {
     audioRef.current.currentTime = 0;
     setIsPlaying(false);
     setCurrentStation(null);
+    setCurrentStream(null);
+    setNowPlaying(null);
+    
+    if (nowPlayingInterval.current) {
+      clearInterval(nowPlayingInterval.current);
+      nowPlayingInterval.current = null;
+    }
   };
 
   return (
@@ -141,13 +326,31 @@ export const SomaPlayer = () => {
             <div className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <Volume2 className="w-6 h-6 text-primary-foreground" />
+                  <Radio className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground">{currentStation.title}</h3>
                   <p className="text-sm text-muted-foreground">{currentStation.genre}</p>
+                  {currentStream && (
+                    <p className="text-xs text-primary">{currentStream.bitrate}</p>
+                  )}
                 </div>
               </div>
+
+              {/* Now Playing Track Info */}
+              {nowPlaying && (
+                <div className="bg-background/50 rounded-lg p-3 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Music className="w-4 h-4 text-primary" />
+                    <span className="text-xs text-muted-foreground">Now Playing</span>
+                  </div>
+                  <p className="font-medium text-sm">{nowPlaying.title}</p>
+                  <p className="text-sm text-muted-foreground">{nowPlaying.artist}</p>
+                  {nowPlaying.album && (
+                    <p className="text-xs text-muted-foreground opacity-75">{nowPlaying.album}</p>
+                  )}
+                </div>
+              )}
               
               <div className="flex items-center gap-2">
                 <Button
@@ -181,7 +384,7 @@ export const SomaPlayer = () => {
 
         {/* Station List */}
         <div className="space-y-3">
-          <h2 className="text-xl font-semibold text-foreground">Stations</h2>
+          <h2 className="text-xl font-semibold text-foreground">Stations ({somaStations.length})</h2>
           {somaStations.map((station) => (
             <Card
               key={station.id}
@@ -189,18 +392,45 @@ export const SomaPlayer = () => {
                 "bg-card/80 border-border/50 cursor-pointer transition-all hover:shadow-glow hover:scale-105",
                 currentStation?.id === station.id && "ring-2 ring-primary shadow-neon"
               )}
-              onClick={() => playStation(station)}
             >
-              <div className="p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-foreground">{station.title}</h3>
-                  <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
-                    {station.genre}
-                  </span>
+              <div className="p-4 space-y-3">
+                <div 
+                  className="space-y-2"
+                  onClick={() => playStation(station)}
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium text-foreground">{station.title}</h3>
+                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                      {station.genre}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {station.description}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {station.description}
-                </p>
+                
+                {/* Stream Quality Options */}
+                <div className="flex flex-wrap gap-1 pt-2 border-t border-border/30">
+                  {station.streams.map((stream) => (
+                    <Button
+                      key={stream.bitrate}
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playStation(station, stream);
+                      }}
+                      className={cn(
+                        "text-xs bg-background/50 border-border/50 hover:bg-primary/10",
+                        currentStation?.id === station.id && 
+                        currentStream?.bitrate === stream.bitrate && 
+                        "bg-primary/20 border-primary/50"
+                      )}
+                    >
+                      {stream.bitrate}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </Card>
           ))}
