@@ -57,6 +57,29 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom Soma FM colors
+        neon: {
+          purple: "hsl(var(--neon-purple))",
+          blue: "hsl(var(--neon-blue))",
+          pink: "hsl(var(--neon-pink))",
+        },
+        deep: {
+          purple: "hsl(var(--deep-purple))",
+        },
+        surface: {
+          dark: "hsl(var(--dark-surface))",
+          darker: "hsl(var(--darker-surface))",
+        },
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-surface': 'var(--gradient-surface)',
+        'gradient-glow': 'var(--gradient-glow)',
+      },
+      boxShadow: {
+        'neon': 'var(--shadow-neon)',
+        'glow': 'var(--shadow-glow)',
+        'surface': 'var(--shadow-surface)',
       },
       borderRadius: {
         lg: "var(--radius)",
