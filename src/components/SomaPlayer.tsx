@@ -32,9 +32,11 @@ const somaStations: SomaStation[] = [
     description: 'A nicely chilled plate of ambient/downtempo beats and grooves.',
     genre: 'Ambient/Downtempo',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/groovesalad-256-mp3' },
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/groovesalad-256-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/groovesalad-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/groovesalad-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/groovesalad-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/groovesalad-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/groovesalad-32-aac' }
     ]
   },
   {
@@ -43,42 +45,11 @@ const somaStations: SomaStation[] = [
     description: 'Served best chilled, safe with most medications. Atmospheric textures with minimal beats.',
     genre: 'Ambient',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/dronezone-256-mp3' },
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/dronezone-256-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/dronezone-64-aac' }
-    ]
-  },
-  {
-    id: 'defcon',
-    title: 'DEF CON Radio',
-    description: 'Music for Hacking. The DEF CON Year-Round Channel.',
-    genre: 'Electronic',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/defcon-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/defcon-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/defcon-64-aac' }
-    ]
-  },
-  {
-    id: 'beatblender',
-    title: 'Beat Blender',
-    description: 'A late night blend of deep-house and downtempo chill.',
-    genre: 'Deep House',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/beatblender-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/beatblender-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/beatblender-64-aac' }
-    ]
-  },
-  {
-    id: 'secretagent',
-    title: 'Secret Agent',
-    description: 'The soundtrack for your stylish, mysterious, dangerous life. For Spies and PIs too!',
-    genre: 'Lounge',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/secretagent-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/secretagent-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/secretagent-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/dronezone-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/dronezone-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/dronezone-32-aac' }
     ]
   },
   {
@@ -87,75 +58,36 @@ const somaStations: SomaStation[] = [
     description: 'Tune in, turn on, space out. Spaced-out ambient and mid-tempo electronica.',
     genre: 'Space Ambient',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/spacestation-256-mp3' },
+      { bitrate: '320k MP3', url: 'https://ice5.somafm.com/spacestation-320-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/spacestation-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/spacestation-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/spacestation-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/spacestation-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/spacestation-32-aac' }
     ]
   },
   {
-    id: 'lush',
-    title: 'Lush',
-    description: 'Sensuous and mellow female vocals, many with an electronic influence.',
-    genre: 'Electronic/Vocal',
+    id: 'secretagent',
+    title: 'Secret Agent',
+    description: 'The soundtrack for your stylish, mysterious, dangerous life. For Spies and PIs too!',
+    genre: 'Lounge',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/lush-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/lush-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/lush-64-aac' }
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/secretagent-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/secretagent-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/secretagent-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/secretagent-32-aac' }
     ]
   },
   {
-    id: 'indiepop',
-    title: 'Indie Pop Rocks!',
-    description: 'New and classic favorite indie pop tracks.',
-    genre: 'Indie Pop',
+    id: 'defcon',
+    title: 'DEF CON Radio',
+    description: 'Music for Hacking. The DEF CON Year-Round Channel.',
+    genre: 'Electronic',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/indiepop-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/indiepop-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/indiepop-64-aac' }
-    ]
-  },
-  {
-    id: 'poptron',
-    title: 'PopTron',
-    description: 'Electropop and indie dance rock with sparkle and pop.',
-    genre: 'Electropop',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/poptron-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/poptron-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/poptron-64-aac' }
-    ]
-  },
-  {
-    id: 'cliqhop',
-    title: 'cliqhop idm',
-    description: "Blips'n'beeps backed mostly w/beats. Intelligent Dance Music.",
-    genre: 'IDM',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/cliqhop-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/cliqhop-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/cliqhop-64-aac' }
-    ]
-  },
-  {
-    id: 'deepspaceone',
-    title: 'Deep Space One',
-    description: 'Deep ambient electronic, experimental and space music. For inner and outer space exploration.',
-    genre: 'Space Music',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/deepspaceone-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/deepspaceone-64-aac' }
-    ]
-  },
-  {
-    id: 'thetrip',
-    title: 'The Trip',
-    description: 'Progressive house / trance. Tip top tunes.',
-    genre: 'Progressive House',
-    streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/thetrip-256-mp3' },
-      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/thetrip-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/thetrip-64-aac' }
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/defcon-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/defcon-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/defcon-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/defcon-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/defcon-32-aac' }
     ]
   },
   {
@@ -164,9 +96,220 @@ const somaStations: SomaStation[] = [
     description: 'Early 80s UK Synthpop and a bit of New Wave.',
     genre: '80s Synthpop',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/u80s-256-mp3' },
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/u80s-256-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/u80s-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/u80s-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/u80s-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/u80s-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/u80s-32-aac' }
+    ]
+  },
+  {
+    id: 'lush',
+    title: 'Lush',
+    description: 'Sensuous and mellow female vocals, many with an electronic influence.',
+    genre: 'Electronic/Vocal',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/lush-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/lush-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/lush-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/lush-32-aac' }
+    ]
+  },
+  {
+    id: 'seventies',
+    title: 'Left Coast 70s',
+    description: 'Mellow album rock from the Seventies. Yacht not required.',
+    genre: '70s Rock',
+    streams: [
+      { bitrate: '320k MP3', url: 'https://ice5.somafm.com/seventies-320-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/seventies-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/seventies-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/seventies-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/seventies-32-aac' }
+    ]
+  },
+  {
+    id: 'folkfwd',
+    title: 'Folk Forward',
+    description: 'Indie Folk, Alt-folk and the occasional folk classics.',
+    genre: 'Folk',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/folkfwd-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/folkfwd-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/folkfwd-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/folkfwd-32-aac' }
+    ]
+  },
+  {
+    id: 'beatblender',
+    title: 'Beat Blender',
+    description: 'A late night blend of deep-house and downtempo chill.',
+    genre: 'Deep House',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/beatblender-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/beatblender-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/beatblender-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/beatblender-32-aac' }
+    ]
+  },
+  {
+    id: 'bootliquor',
+    title: 'Boot Liquor',
+    description: 'Americana Roots music for Cowhands, Cowpokes and Cowtippers',
+    genre: 'Americana',
+    streams: [
+      { bitrate: '320k MP3', url: 'https://ice5.somafm.com/bootliquor-320-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/bootliquor-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/bootliquor-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/bootliquor-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/bootliquor-32-aac' }
+    ]
+  },
+  {
+    id: 'thetrip',
+    title: 'The Trip',
+    description: 'Progressive house / trance. Tip top tunes.',
+    genre: 'Progressive House',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/thetrip-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/thetrip-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/thetrip-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/thetrip-32-aac' }
+    ]
+  },
+  {
+    id: 'suburbsofgoa',
+    title: 'Suburbs of Goa',
+    description: 'Desi-influenced Asian world beats and beyond.',
+    genre: 'World Beats',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/suburbsofgoa-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/suburbsofgoa-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/suburbsofgoa-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/suburbsofgoa-32-aac' }
+    ]
+  },
+  {
+    id: 'darkzone',
+    title: 'The Dark Zone',
+    description: 'The darker side of deep ambient. Music for staring into the Abyss.',
+    genre: 'Dark Ambient',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/darkzone-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/darkzone-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/darkzone-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/darkzone-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/darkzone-32-aac' }
+    ]
+  },
+  {
+    id: 'thistle',
+    title: 'ThistleRadio',
+    description: 'Exploring music from Celtic roots and branches',
+    genre: 'Celtic',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/thistle-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/thistle-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/thistle-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/thistle-32-aac' }
+    ]
+  },
+  {
+    id: 'bossa',
+    title: 'Bossa Beyond',
+    description: 'Silky-smooth, laid-back Brazilian-style rhythms of Bossa Nova, Samba and beyond',
+    genre: 'Bossa Nova',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/bossa-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/bossa-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/bossa-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/bossa-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/bossa-32-aac' }
+    ]
+  },
+  {
+    id: 'sonicuniverse',
+    title: 'Sonic Universe',
+    description: 'Transcending the world of jazz with eclectic, avant-garde takes on tradition.',
+    genre: 'Jazz',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/sonicuniverse-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/sonicuniverse-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/sonicuniverse-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/sonicuniverse-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/sonicuniverse-32-aac' }
+    ]
+  },
+  {
+    id: 'poptron',
+    title: 'PopTron',
+    description: 'Electropop and indie dance rock with sparkle and pop.',
+    genre: 'Electropop',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/poptron-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/poptron-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/poptron-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/poptron-32-aac' }
+    ]
+  },
+  {
+    id: 'reggae',
+    title: 'Heavyweight Reggae',
+    description: 'Reggae, Ska, Rocksteady classic and deep tracks.',
+    genre: 'Reggae',
+    streams: [
+      { bitrate: '256k MP3', url: 'https://ice5.somafm.com/reggae-256-mp3' },
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/reggae-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/reggae-128-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/reggae-32-aac' }
+    ]
+  },
+  {
+    id: 'fluid',
+    title: 'Fluid',
+    description: 'Drown in the electronic sound of instrumental hiphop, future soul and liquid trap.',
+    genre: 'Electronic Hip-Hop',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/fluid-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/fluid-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/fluid-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/fluid-32-aac' }
+    ]
+  },
+  {
+    id: 'indiepop',
+    title: 'Indie Pop Rocks!',
+    description: 'New and classic favorite indie pop tracks.',
+    genre: 'Indie Pop',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/indiepop-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/indiepop-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/indiepop-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/indiepop-32-aac' }
+    ]
+  },
+  {
+    id: 'cliqhop',
+    title: 'cliqhop idm',
+    description: "Blips'n'beeps backed mostly w/beats. Intelligent Dance Music.",
+    genre: 'IDM',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/cliqhop-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/cliqhop-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/cliqhop-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/cliqhop-32-aac' }
+    ]
+  },
+  {
+    id: 'deepspaceone',
+    title: 'Deep Space One',
+    description: 'Deep ambient electronic, experimental and space music. For inner and outer space exploration.',
+    genre: 'Space Music',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/deepspaceone-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/deepspaceone-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/deepspaceone-32-aac' }
     ]
   },
   {
@@ -175,9 +318,10 @@ const somaStations: SomaStation[] = [
     description: 'From black to doom, prog to sludge, thrash to post, stoner to crossover, punk to industrial.',
     genre: 'Metal',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/metal-256-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/metal-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/metal-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/metal-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/metal-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/metal-32-aac' }
     ]
   },
   {
@@ -186,9 +330,34 @@ const somaStations: SomaStation[] = [
     description: 'Celebrating NASA and Space Explorers everywhere.',
     genre: 'Space/Ambient',
     streams: [
-      { bitrate: '256k MP3', url: 'https://ice1.somafm.com/missioncontrol-256-mp3' },
       { bitrate: '128k MP3', url: 'https://ice5.somafm.com/missioncontrol-128-mp3' },
-      { bitrate: '64k AAC', url: 'https://ice2.somafm.com/missioncontrol-64-aac' }
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/missioncontrol-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/missioncontrol-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/missioncontrol-32-aac' }
+    ]
+  },
+  {
+    id: 'covers',
+    title: 'Covers',
+    description: 'Just covers. Songs you know by artists you don\'t. We\'ve got you covered.',
+    genre: 'Cover Songs',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/covers-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/covers-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/covers-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/covers-32-aac' }
+    ]
+  },
+  {
+    id: '7soul',
+    title: 'Seven Inch Soul',
+    description: 'Vintage soul tracks from the original 45 RPM vinyl.',
+    genre: 'Soul/Funk',
+    streams: [
+      { bitrate: '128k MP3', url: 'https://ice5.somafm.com/7soul-128-mp3' },
+      { bitrate: '128k AAC', url: 'https://ice5.somafm.com/7soul-128-aac' },
+      { bitrate: '64k AAC', url: 'https://ice5.somafm.com/7soul-64-aac' },
+      { bitrate: '32k AAC', url: 'https://ice5.somafm.com/7soul-32-aac' }
     ]
   }
 ];
@@ -289,7 +458,7 @@ export const SomaPlayer = () => {
       fetchNowPlaying(station, selectedStream.url);
       nowPlayingInterval.current = setInterval(() => {
         fetchNowPlaying(station, selectedStream.url);
-      }, 30000);
+      }, 3000); // Updated to 3 seconds
       
     } catch (error) {
       console.error('Error playing station:', error);
