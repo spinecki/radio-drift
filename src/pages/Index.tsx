@@ -1,7 +1,7 @@
-import { SomaPlayer } from '@/components/SomaPlayer';
+import { StationList } from '@/components/StationList';
 
 const Index = () => {
-  return <SomaPlayer />;
+  return <StationList />;
 };
 
 export default Index;
