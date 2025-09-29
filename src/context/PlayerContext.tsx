@@ -96,10 +96,12 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           playedAt: Date.now()
         };
         
-        // Only add if it's a new track
-        if (state.trackHistory.length === 0 || 
-            state.trackHistory[0].title !== track.title || 
-            state.trackHistory[0].artist !== track.artist) {
+        // Only add if it's a new track (check title AND artist to avoid duplicates)
+        const isNewTrack = state.trackHistory.length === 0 || 
+            state.trackHistory[0].title.toLowerCase().trim() !== track.title.toLowerCase().trim() || 
+            state.trackHistory[0].artist.toLowerCase().trim() !== track.artist.toLowerCase().trim();
+        
+        if (isNewTrack) {
           dispatch({ type: 'ADD_TO_HISTORY', payload: track });
         }
       }

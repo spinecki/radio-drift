@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play, Users, Music } from 'lucide-react';
-import { SomaChannel } from '@/types/soma';
+import { Play, Users, Music, Settings } from 'lucide-react';
+import { SomaChannel, SomaPlaylist } from '@/types/soma';
 import { usePlayer } from '@/context/PlayerContext';
 import { useSomaChannels } from '@/hooks/useSomaChannels';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-const getStreamUrl = async (channel: SomaChannel): Promise<string> => {
-  // For Groove Salad, prefer FLAC HLS (direct stream URL)
-  if (channel.id === 'groovesalad' && channel.playlists[0]?.format === 'flac') {
-    return channel.playlists[0].url;
-  }
+const getStreamUrl = async (channel: SomaChannel, selectedPlaylist?: SomaPlaylist): Promise<string> => {
+  // Use selected playlist or default logic
+  const playlist = selectedPlaylist || (() => {
+    // For Groove Salad, prefer FLAC HLS (direct stream URL)
+    if (channel.id === 'groovesalad' && channel.playlists.find(p => p.format === 'flac')) {
+      return channel.playlists.find(p => p.format === 'flac')!;
+    }
+    
+    // For others, get highest quality MP3 or AAC
+    return channel.playlists.find(p => p.quality === 'highest') || channel.playlists[0];
+  })();
   
-  // For others, get highest quality MP3 or AAC and parse PLS
-  const highestQuality = channel.playlists.find(p => p.quality === 'highest');
-  const playlistUrl = highestQuality?.url || channel.playlists[0]?.url || '';
+  const playlistUrl = playlist?.url || '';
   
   if (playlistUrl.endsWith('.pls')) {
     try {
@@ -48,6 +58,7 @@ const formatQuality = (playlist: any) => {
 export const StationList: React.FC = () => {
   const { channels, loading, error } = useSomaChannels();
   const { play, state } = usePlayer();
+  const [selectedPlaylists, setSelectedPlaylists] = useState<Record<string, SomaPlaylist>>({});
 
   if (loading) {
     return (
@@ -72,12 +83,20 @@ export const StationList: React.FC = () => {
   }
 
   const handlePlayStation = async (station: SomaChannel) => {
-    const streamUrl = await getStreamUrl(station);
+    const selectedPlaylist = selectedPlaylists[station.id];
+    const streamUrl = await getStreamUrl(station, selectedPlaylist);
     await play(station, streamUrl);
   };
 
+  const handlePlaylistSelect = (stationId: string, playlist: SomaPlaylist) => {
+    setSelectedPlaylists(prev => ({
+      ...prev,
+      [stationId]: playlist
+    }));
+  };
+
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 pb-32">
       <div className="mb-8 text-center">
         <h1 className="text-4xl font-bold mb-2">SomaFM Radio</h1>
         <p className="text-muted-foreground text-lg">
@@ -88,7 +107,7 @@ export const StationList: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {channels.map((station) => (
           <Card key={station.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-video relative">
+            <div className="aspect-[4/3] relative">
               <img
                 src={station.image}
                 alt={station.title}
@@ -126,9 +145,29 @@ export const StationList: React.FC = () => {
                 <Badge variant="outline" className="capitalize">
                   {station.genre}
                 </Badge>
-                <span className="text-xs text-muted-foreground">
-                  {formatQuality(station.playlists[0])}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {formatQuality(selectedPlaylists[station.id] || station.playlists[0])}
+                  </span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                        <Settings className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {station.playlists.map((playlist, index) => (
+                        <DropdownMenuItem
+                          key={index}
+                          onClick={() => handlePlaylistSelect(station.id, playlist)}
+                          className={selectedPlaylists[station.id] === playlist ? 'bg-accent' : ''}
+                        >
+                          {formatQuality(playlist)}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
               
               {station.lastPlaying && (
