@@ -48,11 +48,11 @@ const getStreamUrl = async (channel: SomaChannel, selectedPlaylist?: SomaPlaylis
 };
 
 const formatQuality = (playlist: any) => {
-  if (playlist.format === 'flac') return 'FLAC HLS';
-  if (playlist.format === 'mp3' && playlist.url.includes('320')) return '320k MP3';
-  if (playlist.format === 'mp3') return '256k MP3';
-  if (playlist.format === 'aac') return '128k AAC';
-  return playlist.quality;
+  if (playlist.format === 'flac') return 'FLAC';
+  if (playlist.format === 'aacp') return 'HE-AAC+';
+  if (playlist.format === 'aac') return 'AAC';
+  if (playlist.format === 'mp3') return 'MP3';
+  return playlist.format?.toUpperCase() || 'Stream';
 };
 
 export const StationList: React.FC = () => {
@@ -107,9 +107,9 @@ export const StationList: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {channels.map((station) => (
           <Card key={station.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-[4/3] relative">
+            <div className="aspect-video relative">
               <img
-                src={station.image}
+                src={station.largeimage || station.image}
                 alt={station.title}
                 className="w-full h-full object-cover"
                 onError={(e) => {

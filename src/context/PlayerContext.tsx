@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useRef, useEffect } from 'react';
 import { PlayerState, SomaChannel, TrackHistory } from '@/types/soma';
-import { StreamMetadataReader, getMetadataViaProxy } from '@/utils/streamMetadata';
+import { StreamMetadataReader, getMetadataViaProxy, getTrackHistory } from '@/utils/streamMetadata';
 
 interface PlayerContextType {
   state: PlayerState;
@@ -18,6 +18,7 @@ type PlayerAction =
   | { type: 'SET_PLAYING'; payload: boolean }
   | { type: 'SET_VOLUME'; payload: number }
   | { type: 'ADD_TO_HISTORY'; payload: TrackHistory }
+  | { type: 'SET_TRACK_HISTORY'; payload: TrackHistory[] }
   | { type: 'STOP' };
 
 const playerReducer = (state: PlayerState, action: PlayerAction): PlayerState => {
@@ -37,6 +38,11 @@ const playerReducer = (state: PlayerState, action: PlayerAction): PlayerState =>
       return {
         ...state,
         trackHistory: [action.payload, ...state.trackHistory.slice(0, 49)] // Keep last 50 tracks
+      };
+    case 'SET_TRACK_HISTORY':
+      return {
+        ...state,
+        trackHistory: action.payload
       };
     case 'STOP':
       return {
@@ -81,29 +87,15 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const fetchMetadata = async () => {
-    if (!state.currentStation || !state.currentStream) return;
+    if (!state.currentStation) return;
 
     try {
-      let metadata = await getMetadataViaProxy(state.currentStation.id);
+      // Get full track history from SomaFM API
+      const tracks = await getTrackHistory(state.currentStation.id);
       
-      if (!metadata) {
-        metadata = await metadataReader.current.getMetadata(state.currentStream);
-      }
-      
-      if (metadata) {
-        const track: TrackHistory = {
-          ...metadata,
-          playedAt: Date.now()
-        };
-        
-        // Only add if it's a new track (check title AND artist to avoid duplicates)
-        const isNewTrack = state.trackHistory.length === 0 || 
-            state.trackHistory[0].title.toLowerCase().trim() !== track.title.toLowerCase().trim() || 
-            state.trackHistory[0].artist.toLowerCase().trim() !== track.artist.toLowerCase().trim();
-        
-        if (isNewTrack) {
-          dispatch({ type: 'ADD_TO_HISTORY', payload: track });
-        }
+      if (tracks.length > 0) {
+        // Replace entire track history with fresh data from API
+        dispatch({ type: 'SET_TRACK_HISTORY', payload: tracks });
       }
     } catch (error) {
       console.error('Error fetching metadata:', error);

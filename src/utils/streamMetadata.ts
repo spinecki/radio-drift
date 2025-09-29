@@ -1,3 +1,5 @@
+import { TrackHistory } from '@/types/soma';
+
 export interface TrackMetadata {
   title: string;
   artist: string;
@@ -110,10 +112,9 @@ export class StreamMetadataReader {
   }
 }
 
-// Alternative method using proxy server for CORS
-export async function getMetadataViaProxy(stationId: string): Promise<TrackMetadata | null> {
+// Get full track history from SomaFM API
+export async function getTrackHistory(stationId: string): Promise<TrackHistory[]> {
   try {
-    // Try SomaFM's internal song history endpoints
     const response = await fetch(`https://somafm.com/songs/${stationId}.json`, {
       mode: 'cors'
     });
@@ -123,16 +124,30 @@ export async function getMetadataViaProxy(stationId: string): Promise<TrackMetad
     }
     
     const data = await response.json();
-    const currentSong = data.songs?.[0];
+    const songs = data.songs || [];
     
-    if (currentSong) {
+    return songs.map((song: any) => ({
+      artist: song.artist || 'Unknown Artist',
+      title: song.title || 'Unknown Title',
+      album: song.album,
+      playedAt: parseInt(song.date) * 1000 // Convert Unix timestamp to milliseconds
+    }));
+  } catch (error) {
+    console.error('Error fetching track history:', error);
+    return [];
+  }
+}
+
+export async function getMetadataViaProxy(stationId: string): Promise<TrackMetadata | null> {
+  try {
+    const history = await getTrackHistory(stationId);
+    if (history.length > 0) {
       return {
-        artist: currentSong.artist || 'Unknown Artist',
-        title: currentSong.title || 'Unknown Title',
-        album: currentSong.album
+        artist: history[0].artist,
+        title: history[0].title,
+        album: history[0].album
       };
     }
-    
     return null;
   } catch (error) {
     console.error('Error fetching metadata via proxy:', error);

@@ -3,14 +3,59 @@ import { useParams, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Music, Clock, User } from 'lucide-react';
+import { ArrowLeft, Music, Clock, User, Settings } from 'lucide-react';
 import { usePlayer } from '@/context/PlayerContext';
 import { useSomaChannels } from '@/hooks/useSomaChannels';
+import { SomaPlaylist } from '@/types/soma';
+import { useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+const getStreamUrl = async (station: any, selectedPlaylist?: SomaPlaylist): Promise<string> => {
+  const playlist = selectedPlaylist || (() => {
+    if (station.id === 'groovesalad' && station.playlists.find((p: any) => p.format === 'flac')) {
+      return station.playlists.find((p: any) => p.format === 'flac')!;
+    }
+    return station.playlists.find((p: any) => p.quality === 'highest') || station.playlists[0];
+  })();
+  
+  const playlistUrl = playlist?.url || '';
+  
+  if (playlistUrl.endsWith('.pls')) {
+    try {
+      const response = await fetch(playlistUrl);
+      const plsContent = await response.text();
+      const lines = plsContent.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('File1=') || line.startsWith('File=')) {
+          return line.substring(line.indexOf('=') + 1).trim();
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing PLS file:', error);
+    }
+  }
+  
+  return playlistUrl;
+};
+
+const formatQuality = (playlist: any) => {
+  if (playlist.format === 'flac') return 'FLAC';
+  if (playlist.format === 'aacp') return 'HE-AAC+';
+  if (playlist.format === 'aac') return 'AAC';
+  if (playlist.format === 'mp3') return 'MP3';
+  return playlist.format?.toUpperCase() || 'Stream';
+};
 
 export const Tracklist: React.FC = () => {
   const { stationId } = useParams<{ stationId: string }>();
-  const { state } = usePlayer();
+  const { state, play } = usePlayer();
   const { channels } = useSomaChannels();
+  const [selectedPlaylist, setSelectedPlaylist] = useState<SomaPlaylist | null>(null);
 
   const station = channels.find(s => s.id === stationId) || state.currentStation;
 
@@ -86,6 +131,35 @@ export const Tracklist: React.FC = () => {
                   {station.dj}
                 </div>
               )}
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs text-muted-foreground">
+                  {formatQuality(selectedPlaylist || station.playlists[0])}
+                </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <Settings className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {station.playlists.map((playlist: SomaPlaylist, index: number) => (
+                      <DropdownMenuItem
+                        key={index}
+                        onClick={async () => {
+                          setSelectedPlaylist(playlist);
+                          if (state.currentStation?.id === station.id && state.isPlaying) {
+                            const streamUrl = await getStreamUrl(station, playlist);
+                            await play(station, streamUrl);
+                          }
+                        }}
+                        className={selectedPlaylist === playlist ? 'bg-accent' : ''}
+                      >
+                        {formatQuality(playlist)}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </div>
