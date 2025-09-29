@@ -7,15 +7,34 @@ import { SomaChannel } from '@/types/soma';
 import { usePlayer } from '@/context/PlayerContext';
 import { useSomaChannels } from '@/hooks/useSomaChannels';
 
-const getStreamUrl = (channel: SomaChannel): string => {
-  // For Groove Salad, prefer FLAC HLS
+const getStreamUrl = async (channel: SomaChannel): Promise<string> => {
+  // For Groove Salad, prefer FLAC HLS (direct stream URL)
   if (channel.id === 'groovesalad' && channel.playlists[0]?.format === 'flac') {
     return channel.playlists[0].url;
   }
   
-  // For others, get highest quality MP3 or AAC
+  // For others, get highest quality MP3 or AAC and parse PLS
   const highestQuality = channel.playlists.find(p => p.quality === 'highest');
-  return highestQuality?.url || channel.playlists[0]?.url || '';
+  const playlistUrl = highestQuality?.url || channel.playlists[0]?.url || '';
+  
+  if (playlistUrl.endsWith('.pls')) {
+    try {
+      const response = await fetch(playlistUrl);
+      const plsContent = await response.text();
+      
+      // Parse PLS file to extract stream URL
+      const lines = plsContent.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('File1=') || line.startsWith('File=')) {
+          return line.substring(line.indexOf('=') + 1).trim();
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing PLS file:', error);
+    }
+  }
+  
+  return playlistUrl;
 };
 
 const formatQuality = (playlist: any) => {
@@ -52,9 +71,9 @@ export const StationList: React.FC = () => {
     );
   }
 
-  const handlePlayStation = (station: SomaChannel) => {
-    const streamUrl = getStreamUrl(station);
-    play(station, streamUrl);
+  const handlePlayStation = async (station: SomaChannel) => {
+    const streamUrl = await getStreamUrl(station);
+    await play(station, streamUrl);
   };
 
   return (
@@ -69,9 +88,9 @@ export const StationList: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {channels.map((station) => (
           <Card key={station.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-square relative">
+            <div className="aspect-video relative">
               <img
-                src={station.largeimage}
+                src={station.image}
                 alt={station.title}
                 className="w-full h-full object-cover"
                 onError={(e) => {

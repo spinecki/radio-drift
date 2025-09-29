@@ -4,7 +4,7 @@ import { StreamMetadataReader, getMetadataViaProxy } from '@/utils/streamMetadat
 
 interface PlayerContextType {
   state: PlayerState;
-  play: (station: SomaChannel, streamUrl: string) => void;
+  play: (station: SomaChannel, streamUrl: string) => Promise<void>;
   pause: () => void;
   stop: () => void;
   setVolume: (volume: number) => void;
@@ -108,11 +108,16 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const play = (station: SomaChannel, streamUrl: string) => {
+  const play = async (station: SomaChannel, streamUrl: string) => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = streamUrl;
-      audioRef.current.play().catch(console.error);
+      try {
+        await audioRef.current.play();
+      } catch (error) {
+        console.error('Playback failed:', error);
+        return;
+      }
     }
     
     dispatch({ type: 'SET_STATION', payload: { station, streamUrl } });
